@@ -66,7 +66,7 @@ const LaughCompo = () => {
     <ScrollView style={styles.scrollView}>
       <View style={styles.laughContainer}>
         <Text style={styles.title}>Fun Sound Board</Text>
-        <View style={styles.cardGrid}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardGrid}>
           {soundCards.map((card) => (
             <TouchableOpacity
               key={card.id}
@@ -88,7 +88,7 @@ const LaughCompo = () => {
               <Text style={styles.cardTitle}>{card.title}</Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       </View>
     </ScrollView>
   );
@@ -113,8 +113,6 @@ const styles = {
   },
   cardGrid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
     gap: 32,
     padding: 16,
   },
@@ -129,7 +127,7 @@ const styles = {
     elevation: 3,
     alignItems: 'center',
     width: 200,
-    margin: 8,
+    marginRight: 16,
   },
   iconContainer: {
     marginBottom: 16,

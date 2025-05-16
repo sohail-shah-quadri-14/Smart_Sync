@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
 
 const HomeScreen = ({ navigation }) => {
   const quickActions = [
-    { title: 'Scan Medicine', icon: 'scan-outline', screen: 'Scan' },
+    { title: 'Scan Med', icon: 'scan-outline', screen: 'Scan' },
     { title: 'Chat Support', icon: 'chatbubble-outline', screen: 'Chat' },
     { title: 'Services', icon: 'medkit-outline', screen: 'Services' },
     { title: 'Profile', icon: 'person-outline', screen: 'Profile' },
   ];
+
+  // Create refs for each quick action
+  const actionRefs = useRef(quickActions.map(() => React.createRef()));
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Animate each card with a staggered delay
+      actionRefs.current.forEach((ref, idx) => {
+        setTimeout(() => {
+          ref.current?.fadeInUp(600);
+        }, idx * 150);
+      });
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,14 +42,19 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.quickActionsGrid}>
             {quickActions.map((action, index) => (
-              <TouchableOpacity
+              <Animatable.View
+                ref={actionRefs.current[index]}
                 key={index}
-                style={styles.actionCard}
-                onPress={() => navigation.navigate(action.screen)}
+                style={{ width: '49%' }}
               >
-                <Ionicons name={action.icon} size={32} color="#007AFF" />
-                <Text style={styles.actionTitle}>{action.title}</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionCard}
+                  onPress={() => navigation.navigate(action.screen)}
+                >
+                  <Ionicons name={action.icon} size={32} color="#007AFF" />
+                  <Text style={styles.actionTitle}>{action.title}</Text>
+                </TouchableOpacity>
+              </Animatable.View>
             ))}
           </View>
         </View>
@@ -75,17 +96,20 @@ const styles = StyleSheet.create({
   },
   welcomeSection: {
     padding: 20,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#8ef77c',
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
   welcomeText: {
     fontSize: 18,
+    fontFamily: 'rubik-light',
+    fontStyle: 'italic',
     color: '#fff',
     opacity: 0.9,
   },
   appName: {
     fontSize: 32,
+    fontFamily: 'serif',
     fontWeight: 'bold',
     color: '#fff',
     marginTop: 5,
@@ -111,7 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   actionCard: {
-    width: '48%',
+    width: '55%',
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 15,
