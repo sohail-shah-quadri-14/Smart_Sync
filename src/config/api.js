@@ -1,0 +1,1 @@
+export const GROQ_API_KEY = process.env.GROQ_API_KEY || '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'; 
